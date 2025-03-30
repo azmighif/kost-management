@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Manajemen Kost</title>
+  <style>
+    /* CSS Variables */
+    :root {
+      --primary: #003366;
+      --secondary: #FF6B6B;
+      --dark: #1a1a1a;
+      --light: #ffffff;
+      --gray: #f0f0f0;
+      --success: #4CAF50;
+      --danger: #f44336;
+    }
+
+    /* Dark Mode */
+    body.dark {
+      --primary: #002244;
+      --dark: #ffffff;
+      --light: #1a1a1a;
+      --gray: #333333;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      line-height: 1.6;
+      padding: 20px;
+      max-width: 1200px;
+      margin: 0 auto;
+      background: var(--light);
+      color: var(--dark);
+      transition: all 0.3s;
+    }
+
+    /* Navigation */
+    .sidebar {
+      position: sticky;
+      top: 0;
+      background: var(--primary);
+      padding: 15px;
+      border-radius: 8px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      margin-bottom: 20px;
+    }
+
+    .sidebar a {
+      display: block;
+      padding: 10px;
+      color: var(--light);
+      text-decoration: none;
+      border-radius: 4px;
+      transition: all 0.3s;
+    }
+
+    .sidebar a:hover {
+      background: var(--secondary);
+      color: var(--dark);
+    }
+
+    /* Content */
+    .container {
+      display: grid;
+      grid-template-columns: 250px 1fr;
+      gap: 20px;
+    }
+
+    .content {
+      background: var(--light);
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+
+    /* Tables */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 20px 0;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      border-radius: 8px;
+    }
+
+    th, td {
+      padding: 12px;
+      text-align: left;
+      border-bottom: 1px solid var(--gray);
+    }
+
+    th {
+      background: var(--primary);
+      color: var(--light);
+    }
+
+    tr:hover {
+      background: var(--gray);
+    }
+
+    /* Forms */
+    .form-group {
+      margin: 15px 0;
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 5px;
+      font-weight: 600;
+    }
+
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+      width: 100%;
+      padding: 10px;
+      border: 2px solid var(--gray);
+      border-radius: 4px;
+      background: var(--light);
+      transition: border-color 0.3s;
+    }
+
+    button {
+      background: var(--primary);
+      color: var(--light);
+      border: none;
+      padding: 12px 25px;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: all 0.3s;
+      margin: 10px 0;
+    }
+
+    button:hover {
+      background: var(--secondary);
+    }
+
+    /* Charts */
+    .chart-container {
+      margin: 20px 0;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .container {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Dark Mode Toggle -->
+  <div style="text-align: right; padding: 20px;">
+    <label>
+      <input type="checkbox" id="darkModeToggle" onclick="toggleDarkMode()">
+      Toggle Dark Mode
+    </label>
+  </div>
+
+  <!-- Sidebar -->
+  <div class="container">
+    <div class="sidebar">
+      <a href="#penyewa">Penyewa</a>
+      <a href="#kamar">Kamar</a>
+      <a href="#pembayaran">Pembayaran</a>
+      <a href="#dashboard">Dashboard</a>
+    </div>
+
+    <!-- Content -->
+    <div class="content">
+      <!-- Penyewa -->
+      <section id="penyewa">
+        <h2>Data Penyewa</h2>
+        <div class="form-group">
+          <label>Nama</label>
+          <input type="text" id="nama" required>
+        </div>
+        <div class="form-group">
+          <label>No. HP</label>
+          <input type="text" id="nohp" required>
+        </div>
+        <div class="form-group">
+          <label>Kamar</label>
+          <select id="kamar" required>
+            <option value="">Pilih Kamar</option>
+            <option>A1</option>
+            <option>B2</option>
+            <option>C3</option>
+          </select>
+        </div>
+        <button onclick="simpanPenyewa()">Simpan Penyewa</button>
+
+        <table id="tabel-penyewa">
+          <thead>
+            <tr>
+              <th>Nama</th>
+              <th>No. HP</th>
+              <th>Kamar</th>
+            </tr>
+          </thead>
+          <tbody>
+            <!-- Data dari Google Sheets -->
+          </tbody>
+        </table>
+      </section>
+
+      <!-- Kamar -->
+      <section id="kamar">
+        <h2>Data Kamar</h2>
+        <div class="form-group">
+          <label>Nomor Kamar</label>
+          <input type="text" id="nomorKamar" required>
+        </div>
+        <div class="form-group">
+          <label>Status</label>
+          <select id="statusKamar" required>
+            <option value="">Pilih Status</option>
+            <option>Kosong</option>
+            <option>Terisi</option>
+          </select>
+        </div>
+        <button onclick="simpanKamar()">Simpan Kamar</button>
+
+        <table id="tabel-kamar">
+          <thead>
+            <tr>
+              <th>Nomor</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            <!-- Data dari Google Sheets -->
+          </tbody>
+        </table>
+      </section>
+
+      <!-- Pembayaran -->
+      <section id="pembayaran">
+        <h2>Pembayaran</h2>
+        <div class="form-group">
+          <label>Nama Penyewa</label>
+          <select id="pilihPenyewa" required>
+            <option value="">Pilih Penyewa</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Jumlah</label>
+          <input type="number" id="jumlahBayar" required>
+        </div>
+        <button onclick="simpanPembayaran()">Simpan Pembayaran</button>
+
+        <table id="tabel-pembayaran">
+          <thead>
+            <tr>
+              <th>Nama</th>
+              <th>Jumlah</th>
+            </tr>
+          </thead>
+          <tbody>
+            <!-- Data dari Google Sheets -->
+          </tbody>
+        </table>
+      </section>
+
+      <!-- Dashboard -->
+      <section id="dashboard">
+        <h2>Dashboard</h2>
+        <div class="chart-container">
+          <canvas id="kamarChart"></canvas>
+        </div>
+        <button onclick="generatePDF()">Export PDF</button>
+        <button onclick="exportExcel()">Export Excel</button>
+      </section>
+    </div>
+  </div>
+
+  <!-- Libraries -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+
+  <script>
+    const GAS_URL = 'https://script.google.com/macros/s/AKfycbydC00Gns3FW5muei5bwW_NgDtQaBUroVrdtydD6bQirm-j6Fxig2ZC5Na1ygMlm-DY/exec'; // Ganti dengan URL GAS Anda
+
+    // Dark Mode
+    function toggleDarkMode() {
+      document.body.classList.toggle('dark');
+      localStorage.setItem('darkMode', document.body.classList.contains('dark'));
+    }
+
+    // Load dark mode preference
+    if (localStorage.getItem('darkMode') === 'true') {
+      document.body.classList.add('dark');
+      document.getElementById('darkModeToggle').checked = true;
+    }
+
+    // Load Data dari Google Sheets
+    async function fetchData(sheetName) {
+      try {
+        const response = await fetch(`${GAS_URL}?sheet=${sheetName}`);
+        const data = await response.json();
+        return data.slice(1); // Hapus header
+      } catch (error) {
+        console.error('Error:', error);
+        alert('Gagal memuat data!');
+        return [];
+      }
+    }
+
+    // Simpan Data ke Google Sheets
+    async function saveData(sheetName, data) {
+      try {
+        await fetch(GAS_URL, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ sheet: sheetName, ...data })
+        });
+        alert('Data berhasil disimpan!');
+      } catch (error) {
+        console.error('Error:', error);
+        alert('Gagal menyimpan data!');
+      }
+    }
+
+    // Load Data Saat Halaman Dibuka
+    async function loadPenyewa() {
+      const data = await fetchData('Penyewa');
+      const tbody = document.querySelector('#tabel-penyewa tbody');
+      tbody.innerHTML = data.map(row => `
+        <tr>
+          <td>${row[0]}</td>
+          <td>${row[1]}</td>
+          <td>${row[2]}</td>
+        </tr>
+      `).join('');
+
+      // Update dropdown di pembayaran
+      const selectPenyewa = document.getElementById('pilihPenyewa');
+      selectPenyewa.innerHTML = '<option value="">Pilih Penyewa</option>' + 
+        data.map(row => `<option>${row[0]}</option>`).join('');
+    }
+
+    async function loadKamar() {
+      const data = await fetchData('Kamar');
+      const tbody = document.querySelector('#tabel-kamar tbody');
+      tbody.innerHTML = data.map(row => `
+        <tr>
+          <td>${row[0]}</td>
+          <td>${row[1]}</td>
+        </tr>
+      `).join('');
+
+      // Update chart
+      const terisi = data.filter(row => row[1] === 'Terisi').length;
+      const kosong = data.filter(row => row[1] === 'Kosong').length;
+      new Chart(document.getElementById('kamarChart').getContext('2d'), {
+        type: 'pie',
+        data: {
+          labels: ['Terisi', 'Kosong'],
+          datasets: [{
+            data: [terisi, kosong],
+            backgroundColor: ['#4CAF50', '#f44336']
+          }]
+        }
+      });
+    }
+
+    async function loadPembayaran() {
+      const data = await fetchData('Pembayaran');
+      const tbody = document.querySelector('#tabel-pembayaran tbody');
+      tbody.innerHTML = data.map(row => `
+        <tr>
+          <td>${row[0]}</td>
+          <td>Rp ${row[1]}</td>
+        </tr>
+      `).join('');
+    }
+
+    // Simpan Penyewa dengan Validasi
+    function simpanPenyewa() {
+      const nama = document.getElementById('nama').value.trim();
+      const nohp = document.getElementById('nohp').value.trim();
+      const kamar = document.getElementById('kamar').value;
+
+      if (!nama || !nohp || !kamar) {
+        alert('Semua field wajib diisi!');
+        return;
+      }
+      if (!/^\d+$/.test(nohp)) {
+        alert('No. HP harus berupa angka!');
+        return;
+      }
+
+      saveData('Penyewa', { nama, nohp, kamar });
+      loadPenyewa();
+    }
+
+    // Simpan Kamar dengan Validasi
+    function simpanKamar() {
+      const nomor = document.getElementById('nomorKamar').value.trim();
+      const status = document.getElementById('statusKamar').value;
+
+      if (!nomor || !status) {
+        alert('Semua field wajib diisi!');
+        return;
+      }
+
+      saveData('Kamar', { nomor, status });
+      loadKamar();
+    }
+
+    // Simpan Pembayaran dengan Validasi
+    function simpanPembayaran() {
+      const nama = document.getElementById('pilihPenyewa').value;
+      const jumlah = document.getElementById('jumlahBayar').value;
+
+      if (!nama || !jumlah) {
+        alert('Semua field wajib diisi!');
+        return;
+      }
+      if (isNaN(jumlah)) {
+        alert('Jumlah harus berupa angka!');
+        return;
+      }
+
+      saveData('Pembayaran', { nama, jumlah });
+      loadPembayaran();
+    }
+
+    // Generate PDF
+    function generatePDF() {
+      const doc = new jspdf.jsPDF();
+      doc.text('Laporan Kost', 10, 10);
+      doc.autoTable({ html: '#tabel-penyewa' });
+      doc.save('laporan-kost.pdf');
+    }
+
+    // Export Excel
+    function exportExcel() {
+      const table = document.getElementById('tabel-penyewa');
+      const workbook = XLSX.utils.table_to_book(table);
+      XLSX.writeFile(workbook, 'data-penyewa.xlsx');
+    }
+
+    // Inisialisasi
+    loadPenyewa();
+    loadKamar();
+    loadPembayaran();
+  </script>
+</body>
+</html>
